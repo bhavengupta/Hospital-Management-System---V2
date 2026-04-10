@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Appointment Page</title>
+    <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" 
+    rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" 
+    crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+    <style>
+        #form-body{
+            height:420px;
+            margin-top:50px;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+    <div id="main">
+        <div id="canvas">
+                <h4>Book Appointment</h4>
+                <!-- <div v-if="message" :class="success ? 'alert alert-success' : 'alert alert-danger'">
+                    [[ message ]]
+                </div> -->
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Start Time</th>
+                            <th>End Time</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="available in availabilities" :key="available.Availability_id">
+                            <td>[[ available.Date ]]</td>
+                            <td>[[ available.Start_time ]]</td>
+                            <td>[[ available.End_time ]]</td>
+                            <td>
+                                <button class="btn btn-primary" @click="bookAppointment(available)">Book</button>   
+                            </td>
+                        </tr>    
+                        <tr v-if="availabilities.length === 0">
+                            <td colspan="4" class="text-center">Availabilities Doesn't Exist!</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <button class="btn btn-primary" @click="goBack()">Back</button>
+            </div>
+        </div>   
+    </div>
+</div>
+<script>
+    new Vue ({
+        el: '#app',
+        delimiters: ["[[","]]"],
+        data: {
+            availabilities: [],
+            patient_id: "{{ patient_id }}",
+            doctor_id: "{{ doctor_id }}"
+        },
+
+        mounted() {
+            this.loadData();
+        },
+
+        methods: {
+            loadData() {
+                fetch(`/patient/${this.patient_id}/availability/${this.doctor_id}`, {
+                    credentials: "include"
+                })
+
+                .then(res => res.json())
+                .then(data => {
+                    console.log(data);
+                    this.availabilities = data.availabilities || [];
+                })
+
+                .catch(err => console.log(err));
+            },
+
+            bookAppointment(available) {
+                fetch(`/patient/${this.patient_id}/appointment/${this.doctor_id}`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type":"application/json"
+                    },
+                    credentials:"include",
+                    body: JSON.stringify({
+                        Date: available.Date,
+                        Time: available.Start_time
+                    })
+                })
+
+                .then(res => res.json())
+                .then(data => {
+                    alert(data.message);
+
+                    if (data.message === "Appointment booked successfully") {
+                        window.location = `/patient_dashboard`;
+                    }
+                })
+
+                .catch(err => console.log(err))
+            },
+
+            goBack() {
+                window.location = '/patient_dashboard';
+            }
+        }
+    });
+</script>
+</body>
+</html>
