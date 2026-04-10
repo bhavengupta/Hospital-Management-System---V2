@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Doctor Dashboard</title>
+    <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" 
+    rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" 
+    crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+</head>
+<body>
+    <div id="app">
+    <div id="main">
+        <div id="canvas">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container-fluid">
+                <a class="navbar-brand">Welcome Dr. [[ username ]]!</a>
+                <ul class="nav justify-content-end">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/logout">Log out</a>
+                    </li>
+                </ul>
+            </div>
+            </nav>
+            <button @click="downloadReport()" class="btn btn-primary">View Monthly Report</button>
+                    <div id="content"><br>
+                    <h3 class="headings">Upcoming Appointments</h3>
+                    <div id="table">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                <th scope="col">Appointment_ID</th>
+                                <th scope="col">Patient Name</th>
+                                <th scope="col">Patient History</th>
+                                <th scope="col">Actions</th>
+                                <th scope="col">Cancel this appointment</th>
+                                <th scope="col">Patient History</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="a in appointments" :key="a.Appointment_id">
+                                    <td>[[ a.Appointment_id ]]</td>
+                                    <td>Mr. [[ a.patient.Patient_name ]]</td>
+                                    <td>
+                                        <button v-if="a.Status === 'Booked'" class="btn btn-primary me-md-2" @click="updateDoc(a.Appointment_id)">Update</button>
+                                    </td>
+                                    <td>
+                                        <button v-if="a.Status === 'Booked'" class="btn btn-success me-md-2" @click="markComplete(a.Appointment_id)">Mark as complete</button>
+                                        <span v-else-if="a.Status === 'Completed'" class="badge bg-success">Appointment is completed!</span>
+                                    </td>
+                                    <td>
+                                        <button v-if="a.Status === 'Booked'"class="btn btn-danger me-md-2" @click="markCancel(a.Appointment_id)">Cancel</button>
+                                        <span v-else-if="a.Status === 'Cancelled'"class="badge bg-danger">This Appointment is cancelled!</span>
+                                    </td>
+                                    <td>
+                                        <button v-if="a.Status === 'Completed'" class="btn btn-primary" @click="viewHistory(a.Patient_id)">View</button>
+                                        <span v-else>Not Available</span>
+                                    </td>
+                                </tr>
+                                <tr v-if="appointments.length === 0">
+                                    <td colspan="6" class="text-center">No Appointments!</td>
+                                </tr>
+                            </tbody>
+                            </table>  
+                    </div>
+                </div>
+            <button class="btn btn-primary" @click="provideAvailability">Provide Availability</button>
+        </div>
+    </div>
+    </div>
+    <script>
+        new Vue({
+            el:'#app',
+            delimiters: ["[[","]]"],
+            data: {
+                username: "",
+                doctor: {},
+                appointments: []   
+            },
+            mounted() {
+                this.loadData();
+            },
+            methods: {
+                loadData() {
+                    fetch('/doctor/data', {
+                        credentials: "include"
+                    })
+
+                    .then(res => res.json())
+                    .then(data => {
+                        console.log(data)
+                        this.username = data.username;
+                        this.doctor = data.doctor;
+                        this.appointments = data.appointments;
+                    })
+
+                    .catch(err => console.log(err));
+                },
+
+                updateDoc(id) {
+                    window.location = `/doctor/update/${id}`;
+                },
+
+                markComplete(id) {
+                    fetch(`/doctor/mark_as_complete/${id}` ,{
+                        method:"POST",
+                        credentials: "include"
+                    })
+
+                    .then(res => res.json())
+                    .then(data => {
+                        alert(data.message);
+                        this.loadData();
+                    });
+                },
+
+                markCancel(id) {
+                    fetch(`/doctor/cancel/${id}`, {
+                        method:"POST",
+                        credentials: "include"
+                    })
+
+                    .then(res => res.json())
+                    .then(data => {
+                        alert(data.message);
+                        this.loadData();
+                    });
+                },
+
+                provideAvailability() {
+                    window.location = `/doctor/${this.doctor.Doctor_id}/provide-a`;
+                },
+                viewHistory(patient_id) {
+                    window.location.href = `/doctor/patient/history/${patient_id}`;
+                },
+                downloadReport() {
+                    fetch('/doctor/report')
+                    .then(res => {
+                        if (res.headers.get("content-type").includes("application/json")) {
+                            return res.json();
+                        } else {
+                            window.location.href = '/doctor/report';
+                        }
+                    })
+                    .then(data => {
+                        if (data && data.message) {
+                            alert(data.message);
+                        }
+                    });
+                }
+        }
+    });
+    </script>
+</body>
+</html>
