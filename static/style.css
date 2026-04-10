@@ -1,0 +1,63 @@
+*{
+    margin: 0px;
+}
+#main{
+    border: 2px solid black;
+    margin-top: 10px
+}
+#canvas{
+    border: 2px solid black;
+    width:60%;
+    height:800px;
+    margin:auto;
+}
+#form-body{
+    border:1px solid grey;
+    width:300px;
+    height:400px;
+    margin:auto;
+    margin-top:200px;
+    border-radius:5px;
+    padding:10px
+}
+.headings{
+    margin:15px;
+    margin-left:5px;
+}
+.button-align{
+    margin-top:5px;
+    margin-right:5px;
+}
+.Patient-History-heading{
+    margin-top:0px;
+}
+.heading_check{
+    margin:15px;
+    margin-left:10px;
+}
+.button-align{
+    padding:150px; 
+    margin:auto;
+    margin-left: 50px;
+}
+.book{
+    margin-left: 400px;
+    margin-top: 40px;
+}
+.book_dd{
+    margin-left: 720px;
+    margin-top:20px;
+}
+.book_ad{
+    margin-left: 1420px;
+    margin-top:20px;
+}
+.button_view_dod{
+    margin-right: 8px;
+    margin-top:20px;
+}
+.button-history{
+    padding:20px; 
+    margin:auto;
+    margin-left: 50px;
+}
