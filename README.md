@@ -115,34 +115,6 @@ The project focuses on building a responsive, secure, and high-performance healt
   <li>VS Code</li>
 </ul>
 
-<hr>
-
-<h2>📂 Project Structure</h2>
-
-<pre>
-Hospital-Management-System/
-│
-├── backend/
-│   ├── routes/
-│   ├── models/
-│   ├── services/
-│   ├── tasks/
-│   └── app.py
-│
-├── frontend/
-│   ├── components/
-│   ├── views/
-│   └── assets/
-│
-├── redis/
-├── reports/
-├── requirements.txt
-├── README.md
-└── docker-compose.yml
-</pre>
-
-<hr>
-
 <h2>⚙️ Installation</h2>
 
 <h3>1️⃣ Clone the Repository</h3>
@@ -248,23 +220,9 @@ Add screenshots of:
 <h2>🔮 Future Enhancements</h2>
 
 <ul>
-  <li>AI-based disease prediction</li>
-  <li>Video consultation integration</li>
-  <li>Real-time chat support</li>
-  <li>Online payment gateway</li>
-  <li>Mobile application support</li>
-  <li>Cloud deployment using Docker & Kubernetes</li>
+  <li>AI chatbot support</li>
 </ul>
 
-<hr>
-
-<h2>📄 License</h2>
-
-<p>
-This project is licensed under the MIT License.
-</p>
-
-<hr>
 
 <h2>👨‍💻 Author</h2>
 
