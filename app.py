@@ -58,14 +58,11 @@ def download_file(filename):
     return send_file(filename, as_attachment=True)
     
 
-# cd "/mnt/c/Users/HP/OneDrive/Desktop/MAD2 Project/Hospital-Management-System---V2"
-# source venv/bin/activate
+#Use the below commands for running the below app
+
 # redis-server
 # celery -A app.celery worker --loglevel=info
 # celery -A app.celery beat --loglevel=info
 # ./mailhog
-# http://localhost:8025
-# from backend.celery.tasks import daily_reminder_task
-# daily_reminder_task.delay()
 
 
