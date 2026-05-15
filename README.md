@@ -198,25 +198,6 @@ Celery Background Workers
 MailHog SMTP Notifications
 </pre>
 
-<hr>
-
-<h2>📸 Screenshots</h2>
-
-<p>
-Add screenshots of:
-</p>
-
-<ul>
-  <li>Login Page</li>
-  <li>Dashboard</li>
-  <li>Appointment System</li>
-  <li>Doctor Panel</li>
-  <li>Patient Reports</li>
-  <li>Admin Panel</li>
-</ul>
-
-<hr>
-
 <h2>🔮 Future Enhancements</h2>
 
 <ul>
