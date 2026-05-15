@@ -1,104 +1,299 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Patient Edit Profile Page</title>
-    <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" 
-    rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" 
-    crossorigin="anonymous">
+
+    <title>Patient Edit Profile</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+    rel="stylesheet">
+
+    <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
     <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+
     <style>
-        #form-body{
-            margin-top: 175px;
+
+        body{
+
+            margin:0;
+
+            padding:0;
+
+            background:#f1f5f9;
+
+            font-family:Arial, Helvetica, sans-serif;
+
+            min-height:100vh;
+
+            display:flex;
+
+            justify-content:center;
+
+            align-items:center;
+
         }
+
+        #form-body{
+
+            width:420px;
+
+            background:white;
+
+            padding:30px;
+
+            border-radius:15px;
+
+            box-shadow:0px 5px 20px rgba(0,0,0,0.08);
+
+        }
+
+        .page-title{
+
+            text-align:center;
+
+            margin-bottom:25px;
+
+            color:#0f172a;
+
+            font-weight:bold;
+
+        }
+
+        .form-label{
+
+            font-weight:600;
+
+            margin-bottom:6px;
+
+        }
+
+        .form-control{
+
+            height:45px;
+
+            border-radius:10px;
+
+        }
+
+        .form-control:focus{
+
+            border-color:#2563eb;
+
+            box-shadow:none;
+
+        }
+
+        .btn-update{
+
+            width:100%;
+
+            height:45px;
+
+            border:none;
+
+            border-radius:10px;
+
+            background:#2563eb;
+
+            color:white;
+
+            font-weight:bold;
+
+            transition:0.3s;
+
+        }
+
+        .btn-update:hover{
+
+            background:#1d4ed8;
+
+        }
+
     </style>
+
 </head>
+
 <body>
-    <div id="app">
-    <!-- <div id="main">
-        <div id="canvas"> -->
-            <div id="form-body">
-                <h2>Update Patient</h2>
-                <!-- <div v-if="message" :class="success ? 'alert alert-success' : 'alert alert-danger'">
-                    [[ message ]]
-                </div> -->
-                <form @submit.prevent="updateProfile">
-                    <div class="mb-3">
-                        <label class="form-label">Username</label>
-                        <input type="text" class="form-control" v-model="username" required>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Patient Name</label>
-                        <input type="text" class="form-control" v-model="patient_name" required>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Password</label>
-                        <input type="text" class="form-control" v-model="password" required>
-                    </div>
-                    <div class="text-center">
-                        <input type="submit" class="btn btn-primary" value="Update">
-                    </div>
-                </form>
+
+<div id="app">
+
+    <div id="form-body">
+
+        <h2 class="page-title">
+
+            <i class="fa-solid fa-user-pen me-2"></i>
+
+            Edit Profile
+
+        </h2>
+
+        <form @submit.prevent="updateProfile">
+
+            <div class="mb-3">
+
+                <label class="form-label">
+
+                    Username
+
+                </label>
+
+                <input
+                type="text"
+                class="form-control"
+                v-model="username"
+                required>
+
             </div>
-        </div>
-    <!-- </div>
-    </div> -->
-    <script>
-        new Vue({
-            el: '#app',
-            delimiters: ["[[","]]"],
-            data: {
-                patient_id: null,
-                username: "",
-                patient_name: "",
-                password: ""
-            },
 
-            mounted() {
-                this.loadData();
-            },
+            <div class="mb-3">
 
-            methods: {
-                loadData() {
-                    fetch('/patient/profile/data', {
-                        credentials: "include"
-                    })
+                <label class="form-label">
 
-                    .then(res => res.json())
-                    .then(data => {
-                        console.log(data)
-                        this.patient_id = data.patient_id;
-                        this.username = data.username;
-                        this.patient_name = data.patient_name;
-                    })
+                    Patient Name
 
-                    .catch(err => console.log(err))
+                </label>
+
+                <input
+                type="text"
+                class="form-control"
+                v-model="patient_name"
+                required>
+
+            </div>
+
+            <div class="mb-4">
+
+                <label class="form-label">
+
+                    Password
+
+                </label>
+
+                <input
+                type="password"
+                class="form-control"
+                v-model="password"
+                placeholder="Enter new password"
+                required>
+
+            </div>
+
+            <button
+            type="submit"
+            class="btn-update">
+
+                Update Profile
+
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+<script>
+
+new Vue({
+
+    el:'#app',
+
+    delimiters:["[[","]]"],
+
+    data:{
+
+        patient_id:null,
+
+        username:"",
+
+        patient_name:"",
+
+        password:""
+
+    },
+
+    mounted(){
+
+        this.loadData()
+
+    },
+
+    methods:{
+
+        loadData(){
+
+            fetch('/patient/profile/data',{
+
+                credentials:"include"
+
+            })
+
+            .then(res => res.json())
+
+            .then(data => {
+
+                console.log(data)
+
+                this.patient_id =
+                data.patient_id
+
+                this.username =
+                data.username
+
+                this.patient_name =
+                data.patient_name
+
+            })
+
+            .catch(err => console.log(err))
+
+        },
+
+        updateProfile(){
+
+            fetch(`/patient/edit_profile/${this.patient_id}`,{
+
+                method:"PUT",
+
+                headers:{
+                    "Content-Type":"application/json"
                 },
 
-                updateProfile() {
-                    fetch(`/patient/edit_profile/${this.patient_id}`, {
-                        method: "PUT",
-                        headers: {
-                            "Content-Type":"application/json"
-                        },
-                        credentials: "include",
-                        body: JSON.stringify({
-                            username: this.username,
-                            patient_name: this.patient_name,
-                            password: this.password
-                        })
-                    })
+                credentials:"include",
 
-                    .then(res => res.json())
-                    .then(data => {
-                        alert(data.message);
-                        window.location = '/patient_dashboard'
-                    })
+                body:JSON.stringify({
 
-                    .catch(err => console.log(err))
-                }
-            }
-        })
-    </script>
+                    username:this.username,
+
+                    patient_name:this.patient_name,
+
+                    password:this.password
+
+                })
+
+            })
+
+            .then(res => res.json())
+
+            .then(data => {
+
+                alert(data.message)
+
+                window.location =
+                '/patient_dashboard'
+
+            })
+
+            .catch(err => console.log(err))
+
+        }
+
+    }
+
+})
+
+</script>
+
 </body>
 </html>
