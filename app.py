@@ -15,7 +15,7 @@ def create_app():
     app.debug = True
     app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///hospitalv2.sqlite3"
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    app.secret_key = "gfzosflanfs"
+    # app.secret_key = "gfzosflanfs"
     app.config['CACHE_TYPE'] = "RedisCache"
     app.config['CACHE_DEFAULT_TIMEOUT'] = 30
     app.config['CACHE_REDIS_PORT'] = 6379
