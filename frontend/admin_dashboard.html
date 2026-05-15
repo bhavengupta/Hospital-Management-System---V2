@@ -1,255 +1,721 @@
 <!DOCTYPE html>
 <html>
 <head>
+
     <title>Admin Dashboard</title>
-    <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" 
-    rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" 
-    crossorigin="anonymous">
+
+    <link rel="stylesheet"
+    href="{{url_for('static', filename='style.css')}}">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+    rel="stylesheet">
+
+    <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
     <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+
+    <style>
+
+        body{
+
+            background:#f1f5f9;
+
+            font-family:Arial, Helvetica, sans-serif;
+
+        }
+
+        .top-navbar{
+
+            background:#0f172a;
+
+            padding:15px 25px;
+
+            border-radius:12px;
+
+            margin-bottom:25px;
+
+        }
+
+        .navbar-title{
+
+            color:white;
+
+            font-size:22px;
+
+            font-weight:bold;
+
+        }
+
+        .dashboard-container{
+
+            padding:25px;
+
+        }
+
+        .stats-card{
+
+            background:white;
+
+            border-radius:15px;
+
+            padding:20px;
+
+            box-shadow:0px 5px 15px rgba(0,0,0,0.08);
+
+            margin-bottom:20px;
+
+        }
+
+        .stats-card h4{
+
+            font-size:18px;
+
+            margin-bottom:10px;
+
+            color:#0f172a;
+
+        }
+
+        .stats-number{
+
+            font-size:28px;
+
+            font-weight:bold;
+
+            color:#2563eb;
+
+        }
+
+        .section-box{
+
+            background:white;
+
+            border-radius:15px;
+
+            padding:20px;
+
+            margin-bottom:25px;
+
+            box-shadow:0px 5px 15px rgba(0,0,0,0.08);
+
+        }
+
+        .section-title{
+
+            font-size:22px;
+
+            font-weight:bold;
+
+            margin-bottom:20px;
+
+            color:#0f172a;
+
+        }
+
+        .doctor-card,
+        .patient-card{
+
+            background:#f8fafc;
+
+            border-radius:12px;
+
+            padding:15px;
+
+            margin-bottom:15px;
+
+            border:1px solid #e2e8f0;
+
+        }
+
+        .table{
+
+            margin-top:15px;
+
+        }
+
+        .btn{
+
+            border-radius:8px;
+
+        }
+
+        .search-box{
+
+            width:300px;
+
+        }
+
+        .navbar-brand{
+
+            font-weight:bold;
+
+        }
+
+    </style>
+
 </head>
+
 <body>
-<div id="app" class="container-fluid">
-            <nav class="navbar navbar-light bg-light">
-                <div class="container-fluid">
-                    <a class="navbar-brand">Welcome [[ this_user.username ]]!</a>
-                    <a class="nav-link" href="/logout">Log out</a>
-                    <form class="d-flex" @submit.prevent="search">
-                        <input class="form-control me-2" type="search" placeholder="Doctor, Patient.." v-model="search_query">
-                        <button class="btn btn-outline-success" type="submit">Search</button>
-                    </form>
-                </div>  
-            </nav>
-            <div class="book_ad">   
-                <button class="btn btn-primary" @click="addDoc()">Create</button>
-            </div>
-            <div id="content">
-                <h3 class="headings">Registered Doctors</h3>
-                <span class="badge bg-primary">Doctors registered: [[ count.total_doc ]]</span>
 
-                <nav class="navbar navbar-light bg-light" v-for="d in all_doc" :key="d.Doctor_id">
-                    <div class="container-fluid">
-                        <a class="navbar-brand">Dr. [[ d.Doctor_name ]]</a>
-                        <button class="btn btn-outline-primary" @click="editD(d.Doctor_id)">Edit</button>
-                        <button class="btn btn-outline-danger" @click="deleteDoctor(d.user_id)">Delete</button>
-                        <button v-if="!d.blacklisted" class="btn btn-outline-secondary" @click="blacklistDoctor(d.user_id)">Blacklist</button>
-                        <span v-else class="badge bg-secondary">[[ d.Doctor_name ]] is blacklisted</span>
-                    </div>
-                </nav>
+<div id="app" class="dashboard-container">
 
-                <div id="content"><br>
-                <h3 class="headings">Registered Patients</h3>
-                <span class="badge bg-primary">Patients registered: [[ count.total_pat ]]</span>
-                <nav class="navbar navbar-light bg-light" v-for="p in all_pat" :key="p.Patient_id">
-                    <div class="container-fluid">
-                        <a class="navbar-brand">[[ p.Patient_name ]]</a>
-                        <button class="btn btn-outline-primary" @click="editP(p.Patient_id)">Edit</button>
-                        <button class="btn btn-outline-danger" @click="deletePatient(p.user_id)">Delete</button>
-                        <button v-if='!p.blacklisted' class="btn btn-outline-secondary" @click="blacklistPatient(p.user_id)">Blacklist</button>
-                        <span v-else='p.blacklisted'class="badge btn-secondary">[[ p.Patient_name ]] is blacklisted</span>
-                    </div>
-                </nav>
-            </div>
-                    <div id="content"><br>
-                        <h3 class="headings">Upcoming Appointments</h3>
-                        <span class="badge bg-primary">Upcoming Appointments: [[ count.upcoming_count ]]</span>
-                        <div id="table">
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                    <th scope="col">Appointment_id</th>
-                                    <th scope="col">Patient Name</th>
-                                    <th scope="col">Doctor Name</th>
-                                    <th scope="col">Department Name</th>
-                                    <th scope="col">Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr v-for="a in appointments" :key="a.Appointment_id">
-                                        <td>[[ a.Appointment_id ]]</td>
-                                        <td>[[ a.patient_name ]]</td>
-                                        <td>[[ a.doctor_name ]]</td>
-                                        <td>[[ a.department_name ]]</td>
-                                        <td>[[ a.Status ]]</td>
-                                    </tr>
-                                    <tr v-if="appointments.length === 0">
-                                        <td colspan="5" class="text-center">No upcoming appointments!</td>
-                                    </tr>
-                                </tbody>
-                                </table>
-                            </div>
-                        </div>    
-                        <div id="content"><br>
-                        <h3 class="headings">Past Appointments</h3>
-                        <span class="badge bg-primary">Past Appointments: [[ count.past_count]]</span>
-                        <div id="table">
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                    <th scope="col">Appointment_id</th>
-                                    <th scope="col">Patient Name</th>
-                                    <th scope="col">Doctor Name</th>
-                                    <th scope="col">Department Name</th>
-                                    <th scope="col">Date</th>
-                                    <th scope="col">Status</th>
-                                    <th scope="col">Patient History</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr v-for="a in past_appointments" :key="a.Appointment_id">
-                                        <td>[[ a.Appointment_id ]]</td>
-                                        <td>[[ a.patient_name ]]</td>
-                                        <td>[[ a.doctor_name ]]</td>
-                                        <td>[[ a.department_name ]]</td>
-                                        <td>[[ a.Date ]]</td>
-                                        <td>[[ a.Status ]]</td>
-                                        <td>
-                                            <button class="btn btn-primary" @click="viewHistory(a.Patient_id)">View</button>
-                                        </td>
-                                    </tr>
-                                <tr v-if="past_appointments.length === 0">
-                                    <td colspan="7" class="text-center">No Past Appointments!</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>  
+    <div class="top-navbar d-flex justify-content-between align-items-center">
+
+        <div class="navbar-title">
+            <i class="fa-solid fa-hospital me-2"></i>
+            Admin Dashboard
         </div>
+
+        <div class="d-flex align-items-center">
+
+            <form class="d-flex me-3"
+            @submit.prevent="search">
+
+                <input
+                class="form-control me-2 search-box"
+                type="search"
+                placeholder="Search doctor or patient"
+                v-model="search_query">
+
+                <button
+                class="btn btn-primary"
+                type="submit">
+
+                    Search
+
+                </button>
+
+            </form>
+
+            <a class="btn btn-danger"
+            href="/logout">
+
+                Logout
+
+            </a>
+
+        </div>
+
     </div>
-    <script>
-        new Vue({
-            el:'#app',
-            delimiters: ['[[',']]'],
 
-            data: {
-                this_user: {},
-                all_doc: [],
-                all_pat: [],
-                appointments: [],
-                past_appointments: [],
-                count: {},
-                search_query: ""    
-            },
+    <div class="mb-4">
 
-            methods: {
-                loadData() {
-                    fetch("/admin/data", { 
-                    credentials: "include"
-                    })
-                        .then(res => {
-                            if (res.status === 403) {
-                                alert("Session expired! Kindly login again.")
-                                window.location = '/login'
-                                return
-                            }
-                            return res.json()
-                        })
-                        .then(data => {
-                            console.log("Data:", data)
-                            this.this_user = data.this_user;
-                            this.all_doc = data.all_doc;
-                            this.all_pat = data.all_pat;
-                            this.appointments = data.appointments;
-                            this.past_appointments = data.past_appointments;
-                            this.count = data.count;
-                        })
+        <h3>
+            Welcome [[ this_user.username ]] !
+        </h3>
 
-                        .catch(err => {
-                            console.log("ERROR:", err)
-                        })
-                },
+    </div>
 
-                searchData() {
-                    fetch("/admin/search?search=" + this.search_query, {
-                        credentials: "include"
-                    })
-                    .then(res => res.json())
-                    .then(data => {
-                        this.all_doc = data.doctors
-                        this.all_pat = data.patients
-                    })
-                    .catch(err => console.log(err))
-                },
+    <div class="row">
 
-                blacklistPatient(id){
-                    fetch(`/admin/blacklist/${id}`,{
-                        method:"PUT"
-                    })
+        <div class="col-md-4">
 
-                    .then(res => res.json())
-                    .then(data => {
-                        alert(data.message)
-                        this.loadData()
-                    })
-                },
+            <div class="stats-card">
 
-                deletePatient(id){
-                    fetch(`/admin/delete_patient/${id}`,{
-                    method:"DELETE"
-                })
+                <h4>Total Doctors</h4>
 
-                .then(res => res.json())
-                .then(data => {
-                    alert(data.message)
-                    this.loadData()
-                })
-            },
-                blacklistDoctor(id){
-                    fetch(`/admin/blacklist/${id}`,{
-                    method:"PUT",
-                    credentials: "include"
-                })
+                <div class="stats-number">
+                    [[ count.total_doc ]]
+                </div>
 
-                .then(res => res.json())
-                 .then(data => {
-                    alert(data.message)
-                    this.loadData()
-                })
-            },
-                deleteDoctor(id){
-                    fetch(`/admin/delete_doctor/${id}`,{
-                    method:"DELETE",
-                    credentials: "include"
-                })
+            </div>
 
-                .then(res => res.json())
-                .then(data => {
-                    alert(data.message)
-                    this.loadData()
-                })
-            },
+        </div>
 
-                editP(id){
-                   window.location = `/admin/edit_patient/${id}`;
-            },
-                editD(id){
-                    window.location = `/admin/edit_doctor/${id}`;
-            },
-                addDoc(){
-                    window.location = "/admin/page/add_doctor";
-            },
-                search() {
-                    if (this.search_query.trim() === "") {
-                        this.loadData()
-                    } else {
-                        this.searchData()
-                    }
-                },
+        <div class="col-md-4">
 
-                viewHistory(patient_id) {
-                    window.location.href = `/admin/patient/history/${patient_id}`;
+            <div class="stats-card">
+
+                <h4>Total Patients</h4>
+
+                <div class="stats-number">
+                    [[ count.total_pat ]]
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-4">
+
+            <div class="stats-card">
+
+                <h4>Upcoming Appointments</h4>
+
+                <div class="stats-number">
+                    [[ count.upcoming_count ]]
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="section-box">
+
+        <div class="d-flex justify-content-between align-items-center">
+
+            <h3 class="section-title">
+                Registered Doctors
+            </h3>
+
+            <button class="btn btn-primary"
+            @click="addDoc()">
+
+                Add Doctor
+
+            </button>
+
+        </div>
+
+        <div class="doctor-card"
+        v-for="d in all_doc"
+        :key="d.Doctor_id">
+
+            <div class="d-flex justify-content-between align-items-center">
+
+                <div>
+
+                    <h5>
+                        Dr. [[ d.Doctor_name ]]
+                    </h5>
+
+                </div>
+
+                <div>
+
+                    <button
+                    class="btn btn-outline-primary btn-sm"
+                    @click="editD(d.Doctor_id)">
+
+                        Edit
+
+                    </button>
+
+                    <button
+                    class="btn btn-outline-danger btn-sm"
+                    @click="deleteDoctor(d.user_id)">
+
+                        Delete
+
+                    </button>
+
+                    <button
+                    v-if="!d.blacklisted"
+                    class="btn btn-outline-secondary btn-sm"
+                    @click="blacklistDoctor(d.user_id)">
+
+                        Blacklist
+
+                    </button>
+
+                    <span
+                    v-else
+                    class="badge bg-secondary">
+
+                        Blacklisted
+
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="section-box">
+
+        <h3 class="section-title">
+            Registered Patients
+        </h3>
+
+        <div class="patient-card"
+        v-for="p in all_pat"
+        :key="p.Patient_id">
+
+            <div class="d-flex justify-content-between align-items-center">
+
+                <div>
+
+                    <h5>
+                        [[ p.Patient_name ]]
+                    </h5>
+
+                </div>
+
+                <div>
+
+                    <button
+                    class="btn btn-outline-primary btn-sm"
+                    @click="editP(p.Patient_id)">
+
+                        Edit
+
+                    </button>
+
+                    <button
+                    class="btn btn-outline-danger btn-sm"
+                    @click="deletePatient(p.user_id)">
+
+                        Delete
+
+                    </button>
+
+                    <button
+                    v-if="!p.blacklisted"
+                    class="btn btn-outline-secondary btn-sm"
+                    @click="blacklistPatient(p.user_id)">
+
+                        Blacklist
+
+                    </button>
+
+                    <span
+                    v-else
+                    class="badge bg-secondary">
+
+                        Blacklisted
+
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="section-box">
+
+        <h3 class="section-title">
+            Upcoming Appointments
+        </h3>
+
+        <table class="table table-hover">
+
+            <thead class="table-dark">
+
+                <tr>
+
+                    <th>ID</th>
+                    <th>Patient</th>
+                    <th>Doctor</th>
+                    <th>Department</th>
+                    <th>Status</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                <tr v-for="a in appointments"
+                :key="a.Appointment_id">
+
+                    <td>[[ a.Appointment_id ]]</td>
+                    <td>[[ a.patient_name ]]</td>
+                    <td>[[ a.doctor_name ]]</td>
+                    <td>[[ a.department_name ]]</td>
+                    <td>[[ a.Status ]]</td>
+
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <div class="section-box">
+
+        <h3 class="section-title">
+            Past Appointments
+        </h3>
+
+        <table class="table table-hover">
+
+            <thead class="table-dark">
+
+                <tr>
+
+                    <th>ID</th>
+                    <th>Patient</th>
+                    <th>Doctor</th>
+                    <th>Department</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th>History</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                <tr v-for="a in past_appointments"
+                :key="a.Appointment_id">
+
+                    <td>[[ a.Appointment_id ]]</td>
+                    <td>[[ a.patient_name ]]</td>
+                    <td>[[ a.doctor_name ]]</td>
+                    <td>[[ a.department_name ]]</td>
+                    <td>[[ a.Date ]]</td>
+                    <td>[[ a.Status ]]</td>
+
+                    <td>
+
+                        <button
+                        class="btn btn-primary btn-sm"
+                        @click="viewHistory(a.Patient_id)">
+
+                            View
+
+                        </button>
+
+                    </td>
+
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+<script>
+
+new Vue({
+
+    el:'#app',
+
+    delimiters:['[[',']]'],
+
+    data:{
+
+        this_user:{},
+
+        all_doc:[],
+
+        all_pat:[],
+
+        appointments:[],
+
+        past_appointments:[],
+
+        count:{},
+
+        search_query:""
+
+    },
+
+    methods:{
+
+        loadData(){
+
+            fetch("/admin/data",{
+
+                credentials:"include"
+
+            })
+
+            .then(res => {
+
+                if(res.status === 403){
+
+                    alert("Session expired!")
+
+                    window.location='/login'
+
+                    return
+
                 }
-            },
 
-            mounted() {
-                this.loadData();
-                setTimeout(() => {
-                    alert("Session expired! Kindly login again!")
-                    window.location = '/login'
-                }, 1800000)
+                return res.json()
+
+            })
+
+            .then(data => {
+
+                this.this_user = data.this_user
+
+                this.all_doc = data.all_doc
+
+                this.all_pat = data.all_pat
+
+                this.appointments = data.appointments
+
+                this.past_appointments =
+                data.past_appointments
+
+                this.count = data.count
+
+            })
+
+        },
+
+        searchData(){
+
+            fetch("/admin/search?search=" +
+            this.search_query,{
+
+                credentials:"include"
+
+            })
+
+            .then(res => res.json())
+
+            .then(data => {
+
+                this.all_doc = data.doctors
+
+                this.all_pat = data.patients
+
+            })
+
+        },
+
+        blacklistPatient(id){
+
+            fetch(`/admin/blacklist/${id}`,{
+
+                method:"PUT"
+
+            })
+
+            .then(res => res.json())
+
+            .then(data => {
+
+                alert(data.message)
+
+                this.loadData()
+
+            })
+
+        },
+
+        deletePatient(id){
+
+            fetch(`/admin/delete_patient/${id}`,{
+
+                method:"DELETE"
+
+            })
+
+            .then(res => res.json())
+
+            .then(data => {
+
+                alert(data.message)
+
+                this.loadData()
+
+            })
+
+        },
+
+        blacklistDoctor(id){
+
+            fetch(`/admin/blacklist/${id}`,{
+
+                method:"PUT"
+
+            })
+
+            .then(res => res.json())
+
+            .then(data => {
+
+                alert(data.message)
+
+                this.loadData()
+
+            })
+
+        },
+
+        deleteDoctor(id){
+
+            fetch(`/admin/delete_doctor/${id}`,{
+
+                method:"DELETE"
+
+            })
+
+            .then(res => res.json())
+
+            .then(data => {
+
+                alert(data.message)
+
+                this.loadData()
+
+            })
+
+        },
+
+        editP(id){
+
+            window.location =
+            `/admin/edit_patient/${id}`
+
+        },
+
+        editD(id){
+
+            window.location =
+            `/admin/edit_doctor/${id}`
+
+        },
+
+        addDoc(){
+
+            window.location =
+            "/admin/page/add_doctor"
+
+        },
+
+        search(){
+
+            if(this.search_query.trim() === ""){
+
+                this.loadData()
+
             }
-        });
-    </script>
+
+            else{
+
+                this.searchData()
+
+            }
+
+        },
+
+        viewHistory(patient_id){
+
+            window.location.href =
+            `/admin/patient/history/${patient_id}`
+
+        }
+
+    },
+
+    mounted(){
+
+        this.loadData()
+
+    }
+
+})
+
+</script>
+
 </body>
 </html>
