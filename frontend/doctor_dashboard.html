@@ -1,155 +1,478 @@
 <!DOCTYPE html>
 <html>
 <head>
+
     <title>Doctor Dashboard</title>
-    <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" 
-    rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" 
-    crossorigin="anonymous">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+    rel="stylesheet">
+
+    <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
     <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
-</head>
-<body>
-    <div id="app">
-    <div id="main">
-        <div id="canvas">
-            <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <div class="container-fluid">
-                <a class="navbar-brand">Welcome Dr. [[ username ]]!</a>
-                <ul class="nav justify-content-end">
-                    <li class="nav-item">
-                        <a class="nav-link" href="/logout">Log out</a>
-                    </li>
-                </ul>
-            </div>
-            </nav>
-            <button @click="downloadReport()" class="btn btn-primary">View Monthly Report</button>
-                    <div id="content"><br>
-                    <h3 class="headings">Upcoming Appointments</h3>
-                    <div id="table">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                <th scope="col">Appointment_ID</th>
-                                <th scope="col">Patient Name</th>
-                                <th scope="col">Patient History</th>
-                                <th scope="col">Actions</th>
-                                <th scope="col">Cancel this appointment</th>
-                                <th scope="col">Patient History</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr v-for="a in appointments" :key="a.Appointment_id">
-                                    <td>[[ a.Appointment_id ]]</td>
-                                    <td>Mr. [[ a.patient.Patient_name ]]</td>
-                                    <td>
-                                        <button v-if="a.Status === 'Booked'" class="btn btn-primary me-md-2" @click="updateDoc(a.Appointment_id)">Update</button>
-                                    </td>
-                                    <td>
-                                        <button v-if="a.Status === 'Booked'" class="btn btn-success me-md-2" @click="markComplete(a.Appointment_id)">Mark as complete</button>
-                                        <span v-else-if="a.Status === 'Completed'" class="badge bg-success">Appointment is completed!</span>
-                                    </td>
-                                    <td>
-                                        <button v-if="a.Status === 'Booked'"class="btn btn-danger me-md-2" @click="markCancel(a.Appointment_id)">Cancel</button>
-                                        <span v-else-if="a.Status === 'Cancelled'"class="badge bg-danger">This Appointment is cancelled!</span>
-                                    </td>
-                                    <td>
-                                        <button v-if="a.Status === 'Completed'" class="btn btn-primary" @click="viewHistory(a.Patient_id)">View</button>
-                                        <span v-else>Not Available</span>
-                                    </td>
-                                </tr>
-                                <tr v-if="appointments.length === 0">
-                                    <td colspan="6" class="text-center">No Appointments!</td>
-                                </tr>
-                            </tbody>
-                            </table>  
-                    </div>
-                </div>
-            <button class="btn btn-primary" @click="provideAvailability">Provide Availability</button>
-        </div>
-    </div>
-    </div>
-    <script>
-        new Vue({
-            el:'#app',
-            delimiters: ["[[","]]"],
-            data: {
-                username: "",
-                doctor: {},
-                appointments: []   
-            },
-            mounted() {
-                this.loadData();
-            },
-            methods: {
-                loadData() {
-                    fetch('/doctor/data', {
-                        credentials: "include"
-                    })
 
-                    .then(res => res.json())
-                    .then(data => {
-                        console.log(data)
-                        this.username = data.username;
-                        this.doctor = data.doctor;
-                        this.appointments = data.appointments;
-                    })
+    <style>
 
-                    .catch(err => console.log(err));
-                },
+        body{
 
-                updateDoc(id) {
-                    window.location = `/doctor/update/${id}`;
-                },
+            background:#f1f5f9;
 
-                markComplete(id) {
-                    fetch(`/doctor/mark_as_complete/${id}` ,{
-                        method:"POST",
-                        credentials: "include"
-                    })
+            font-family:Arial, Helvetica, sans-serif;
 
-                    .then(res => res.json())
-                    .then(data => {
-                        alert(data.message);
-                        this.loadData();
-                    });
-                },
-
-                markCancel(id) {
-                    fetch(`/doctor/cancel/${id}`, {
-                        method:"POST",
-                        credentials: "include"
-                    })
-
-                    .then(res => res.json())
-                    .then(data => {
-                        alert(data.message);
-                        this.loadData();
-                    });
-                },
-
-                provideAvailability() {
-                    window.location = `/doctor/${this.doctor.Doctor_id}/provide-a`;
-                },
-                viewHistory(patient_id) {
-                    window.location.href = `/doctor/patient/history/${patient_id}`;
-                },
-                downloadReport() {
-                    fetch('/doctor/report')
-                    .then(res => {
-                        if (res.headers.get("content-type").includes("application/json")) {
-                            return res.json();
-                        } else {
-                            window.location.href = '/doctor/report';
-                        }
-                    })
-                    .then(data => {
-                        if (data && data.message) {
-                            alert(data.message);
-                        }
-                    });
-                }
         }
-    });
-    </script>
+
+        .dashboard-container{
+
+            padding:25px;
+
+        }
+
+        .top-navbar{
+
+            background:#0f172a;
+
+            padding:18px 25px;
+
+            border-radius:15px;
+
+            margin-bottom:25px;
+
+        }
+
+        .navbar-title{
+
+            color:white;
+
+            font-size:24px;
+
+            font-weight:bold;
+
+        }
+
+        .action-buttons{
+
+            margin-bottom:25px;
+
+        }
+
+        .section-box{
+
+            background:white;
+
+            border-radius:15px;
+
+            padding:20px;
+
+            box-shadow:0px 5px 15px rgba(0,0,0,0.08);
+
+        }
+
+        .section-title{
+
+            font-size:22px;
+
+            font-weight:bold;
+
+            margin-bottom:20px;
+
+            color:#0f172a;
+
+        }
+
+        .table{
+
+            margin-top:15px;
+
+        }
+
+        .table thead{
+
+            background:#0f172a;
+
+            color:white;
+
+        }
+
+        .btn{
+
+            border-radius:8px;
+
+        }
+
+        .badge{
+
+            padding:8px 10px;
+
+            font-size:12px;
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div id="app" class="dashboard-container">
+
+    <div class="top-navbar d-flex justify-content-between align-items-center">
+
+        <div class="navbar-title">
+
+            <i class="fa-solid fa-user-doctor me-2"></i>
+
+            Doctor Dashboard
+
+        </div>
+
+        <div>
+
+            <span class="text-white me-4">
+
+                Welcome Dr. [[ username ]]
+
+            </span>
+
+            <a href="/logout"
+            class="btn btn-danger">
+
+                Logout
+
+            </a>
+
+        </div>
+
+    </div>
+
+    <div class="action-buttons">
+
+        <button
+        @click="downloadReport()"
+        class="btn btn-primary me-2">
+
+            <i class="fa-solid fa-file-lines me-1"></i>
+
+            Monthly Report
+
+        </button>
+
+        <button
+        class="btn btn-success"
+        @click="provideAvailability">
+
+            <i class="fa-solid fa-calendar-check me-1"></i>
+
+            Provide Availability
+
+        </button>
+
+    </div>
+
+    <div class="section-box">
+
+        <h3 class="section-title">
+
+            Upcoming Appointments
+
+        </h3>
+
+        <table class="table table-hover">
+
+            <thead>
+
+                <tr>
+
+                    <th>Appointment ID</th>
+                    <th>Patient Name</th>
+                    <th>Update</th>
+                    <th>Status</th>
+                    <th>Cancel</th>
+                    <th>History</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                <tr
+                v-for="a in appointments"
+                :key="a.Appointment_id">
+
+                    <td>
+
+                        [[ a.Appointment_id ]]
+
+                    </td>
+
+                    <td>
+
+                        Mr. [[ a.patient.Patient_name ]]
+
+                    </td>
+
+                    <td>
+
+                        <button
+                        v-if="a.Status === 'Booked'"
+                        class="btn btn-primary btn-sm"
+                        @click="updateDoc(a.Appointment_id)">
+
+                            Update
+
+                        </button>
+
+                        <span
+                        v-else
+                        class="badge bg-secondary">
+
+                            Not Available
+
+                        </span>
+
+                    </td>
+
+                    <td>
+
+                        <button
+                        v-if="a.Status === 'Booked'"
+                        class="btn btn-success btn-sm"
+                        @click="markComplete(a.Appointment_id)">
+
+                            Complete
+
+                        </button>
+
+                        <span
+                        v-else-if="a.Status === 'Completed'"
+                        class="badge bg-success">
+
+                            Completed
+
+                        </span>
+
+                    </td>
+
+                    <td>
+
+                        <button
+                        v-if="a.Status === 'Booked'"
+                        class="btn btn-danger btn-sm"
+                        @click="markCancel(a.Appointment_id)">
+
+                            Cancel
+
+                        </button>
+
+                        <span
+                        v-else-if="a.Status === 'Cancelled'"
+                        class="badge bg-danger">
+
+                            Cancelled
+
+                        </span>
+
+                    </td>
+
+                    <td>
+
+                        <button
+                        v-if="a.Status === 'Completed'"
+                        class="btn btn-info btn-sm"
+                        @click="viewHistory(a.Patient_id)">
+
+                            View
+
+                        </button>
+
+                        <span v-else>
+
+                            Not Available
+
+                        </span>
+
+                    </td>
+
+                </tr>
+
+                <tr v-if="appointments.length === 0">
+
+                    <td colspan="6"
+                    class="text-center">
+
+                        No Appointments Available
+
+                    </td>
+
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+<script>
+
+new Vue({
+
+    el:'#app',
+
+    delimiters:["[[","]]"],
+
+    data:{
+
+        username:"",
+
+        doctor:{},
+
+        appointments:[]
+
+    },
+
+    mounted(){
+
+        this.loadData()
+
+    },
+
+    methods:{
+
+        loadData(){
+
+            fetch('/doctor/data',{
+
+                credentials:"include"
+
+            })
+
+            .then(res => res.json())
+
+            .then(data => {
+
+                this.username = data.username
+
+                this.doctor = data.doctor
+
+                this.appointments =
+                data.appointments
+
+            })
+
+            .catch(err => console.log(err))
+
+        },
+
+        updateDoc(id){
+
+            window.location =
+            `/doctor/update/${id}`
+
+        },
+
+        markComplete(id){
+
+            fetch(`/doctor/mark_as_complete/${id}`,{
+
+                method:"POST",
+
+                credentials:"include"
+
+            })
+
+            .then(res => res.json())
+
+            .then(data => {
+
+                alert(data.message)
+
+                this.loadData()
+
+            })
+
+        },
+
+        markCancel(id){
+
+            fetch(`/doctor/cancel/${id}`,{
+
+                method:"POST",
+
+                credentials:"include"
+
+            })
+
+            .then(res => res.json())
+
+            .then(data => {
+
+                alert(data.message)
+
+                this.loadData()
+
+            })
+
+        },
+
+        provideAvailability(){
+
+            window.location =
+            `/doctor/${this.doctor.Doctor_id}/provide-a`
+
+        },
+
+        viewHistory(patient_id){
+
+            window.location.href =
+            `/doctor/patient/history/${patient_id}`
+
+        },
+
+        downloadReport(){
+
+            fetch('/doctor/report')
+
+            .then(res => {
+
+                if(
+                    res.headers
+                    .get("content-type")
+                    .includes("application/json")
+                ){
+
+                    return res.json()
+
+                }
+
+                else{
+
+                    window.location.href =
+                    '/doctor/report'
+
+                }
+
+            })
+
+            .then(data => {
+
+                if(data && data.message){
+
+                    alert(data.message)
+
+                }
+
+            })
+
+        }
+
+    }
+
+})
+
+</script>
+
 </body>
 </html>
