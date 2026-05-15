@@ -1,105 +1,415 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Login Page</title>
-    <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" 
-    rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" 
-    crossorigin="anonymous">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+    rel="stylesheet">
+
+    <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
     <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+
     <style>
-        #form-body{
-            height:401px;
-            margin-top:200px;
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
         }
+
+        body{
+
+            font-family:Arial, Helvetica, sans-serif;
+
+            background:linear-gradient(135deg,#0f172a,#1e3a8a,#2563eb);
+
+            height:100vh;
+
+            display:flex;
+
+            justify-content:center;
+
+            align-items:center;
+
+        }
+
+        #app{
+
+            width:100%;
+
+            display:flex;
+
+            justify-content:center;
+
+            align-items:center;
+
+        }
+
+        #form-body{
+
+            width:420px;
+
+            background:rgba(255,255,255,0.12);
+
+            backdrop-filter:blur(15px);
+
+            padding:40px;
+
+            border-radius:20px;
+
+            box-shadow:0px 10px 40px rgba(0,0,0,0.25);
+
+            border:1px solid rgba(255,255,255,0.2);
+
+        }
+
+        .icon{
+
+            font-size:45px;
+
+            text-align:center;
+
+            color:white;
+
+            margin-bottom:20px;
+
+        }
+
+        .hospital-title{
+
+            text-align:center;
+
+            color:white;
+
+            font-weight:bold;
+
+            margin-bottom:8px;
+
+        }
+
+        .sub-title{
+
+            text-align:center;
+
+            color:#dbeafe;
+
+            margin-bottom:30px;
+
+            font-size:14px;
+
+        }
+
+        .form-label{
+
+            font-weight:600;
+
+            color:white;
+
+        }
+
+        .form-control{
+
+            height:50px;
+
+            border-radius:12px;
+
+            border:none;
+
+            padding-left:45px;
+
+        }
+
+        .form-control:focus{
+
+            border-color:#2563eb;
+
+            box-shadow:none;
+
+        }
+
+        .input-icon{
+
+            position:absolute;
+
+            top:43px;
+
+            left:15px;
+
+            color:#64748b;
+
+        }
+
+        .btn-login{
+
+            width:100%;
+
+            height:50px;
+
+            background:#2563eb;
+
+            color:white;
+
+            border:none;
+
+            border-radius:12px;
+
+            font-weight:bold;
+
+            transition:0.3s;
+
+        }
+
+        .btn-login:hover{
+
+            background:#1d4ed8;
+
+        }
+
+        .register-text{
+
+            text-align:center;
+
+            margin-top:20px;
+
+            font-size:14px;
+
+            color:white;
+
+        }
+
+        .register-text a{
+
+            text-decoration:none;
+
+            font-weight:bold;
+
+            color:#93c5fd;
+
+        }
+
+        .register-text a:hover{
+
+            color:white;
+
+        }
+
+        .alert{
+
+            border-radius:10px;
+
+        }
+
+        .footer-text{
+
+            text-align:center;
+
+            margin-top:20px;
+
+            color:#dbeafe;
+
+            font-size:13px;
+
+        }
+
     </style>
+
 </head>
+
 <body>
-    <div id="app">
-            <div id="form-body">
-                <h1>Login Form</h1>
-                <div v-if="message" :class="success ? 'alert alert-success' : 'alert alert-danger'">
-                    [[ message ]]
-                </div>
-                <form @submit.prevent="login">
-                    <div class="mb-3">
-                        <label class="form-label">Username</label>
-                        <input type="text" class="form-control" v-model="username" required>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Password</label>
-                        <input type="Password" class="form-control" v-model="password" required>
-                    </div>
-                    <div class="text-center">
-                        <input type="submit" class="btn btn-primary" value="Login"><br>
-                        Are you a new user? <a href="/register">Register</a>
-                    </div>
-                </form>
+
+<div id="app">
+
+    <div id="form-body">
+
+        <div class="icon">
+            <i class="fa-solid fa-hospital"></i>
+        </div>
+
+        <h2 class="hospital-title">
+            Hospital Management System
+        </h2>
+
+        <p class="sub-title">
+            Login to continue
+        </p>
+
+        <div v-if="message"
+        :class="success ? 'alert alert-success' : 'alert alert-danger'">
+
+            [[ message ]]
+
+        </div>
+
+        <form @submit.prevent="login">
+
+            <div class="mb-3 position-relative">
+
+                <label class="form-label">
+                    Username
+                </label>
+
+                <i class="fa-solid fa-user input-icon"></i>
+
+                <input
+                type="text"
+                class="form-control"
+                placeholder="Enter username"
+                v-model="username"
+                required>
+
             </div>
-    <script>
-        new Vue({
-            el: '#app',
 
-            delimiters: ['[[', ']]'],
+            <div class="mb-3 position-relative">
 
-            data:{username:"", password:"", message:"", success:false},
+                <label class="form-label">
+                    Password
+                </label>
 
-            methods:{
-                login(){
-                    fetch("/login", {method:"POST",
+                <i class="fa-solid fa-lock input-icon"></i>
+
+                <input
+                type="password"
+                class="form-control"
+                placeholder="Enter password"
+                v-model="password"
+                required>
+
+            </div>
+
+            <button type="submit" class="btn-login">
+                Login
+            </button>
+
+            <div class="register-text">
+
+                New User?
+
+                <a href="/register">
+                    Register
+                </a>
+
+            </div>
+
+            <p class="footer-text">
+                Secure Healthcare Management Portal
+            </p>
+
+        </form>
+
+    </div>
+
+</div>
+
+<script>
+
+    new Vue({
+
+        el:'#app',
+
+        delimiters:['[[',']]'],
+
+        data:{
+            username:"",
+            password:"",
+            message:"",
+            success:false
+        },
+
+        methods:{
+
+            login(){
+
+                fetch("/login",{
+
+                    method:"POST",
+
                     headers:{
                         "Content-Type":"application/json"
                     },
 
-                    body:JSON.stringify({username:this.username, password:this.password})
+                    body:JSON.stringify({
+                        username:this.username,
+                        password:this.password
                     })
 
-                    .then(async res => {
-                        let data = await res.json()
-                            if (!res.ok) {
-                                throw data 
-                            }
-                            return data
-                    })
-                    .then(data => {
-                        this.success = true
-                        this.message = data.message || "Login Successful!"
+                })
 
-                        if (data.type === 'admin') {
-                            setTimeout(() => {
-                                window.location = '/admin_dashboard'
-                            }, 2000)
-                        }
+                .then(async res => {
 
-                        else if (data.type === 'doctor') {
-                            setTimeout(() => {
-                                window.location = '/doctor_dashboard'
-                            }, 2000)
-                        }
+                    let data = await res.json()
 
-                        else if (data.type === 'patient') {
-                            setTimeout(() => {
-                                window.location = '/patient_dashboard'
-                            }, 2000)
-                        }
-                        else{
-                            this.message = data.message
-                        }
+                    if(!res.ok){
+                        throw data
+                    }
+
+                    return data
+
+                })
+
+                .then(data => {
+
+                    this.success = true
+
+                    this.message =
+                    data.message || "Login Successful!"
+
+                    if(data.type === 'admin'){
+
                         setTimeout(() => {
-                        }, 2000)
-                    })
-                    
-                    .catch((err) =>{
-                        this.success = false
-                        this.message = err.message
-                        })
-                    },
 
-                }
+                            window.location =
+                            '/admin_dashboard'
+
+                        },2000)
+
+                    }
+
+                    else if(data.type === 'doctor'){
+
+                        setTimeout(() => {
+
+                            window.location =
+                            '/doctor_dashboard'
+
+                        },2000)
+
+                    }
+
+                    else if(data.type === 'patient'){
+
+                        setTimeout(() => {
+
+                            window.location =
+                            '/patient_dashboard'
+
+                        },2000)
+
+                    }
+
+                })
+
+                .catch((err) => {
+
+                    this.success = false
+
+                    this.message =
+                    err.message || "Login Failed"
+
+                })
+
             }
 
-        )
+        }
 
-    </script>
+    })
+
+</script>
+
 </body>
 </html>
