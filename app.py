@@ -13,7 +13,6 @@ mail = Mail()
 def create_app():
     app = Flask(__name__, template_folder='frontend')
     app.debug = True
-    app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///hospitalv2.sqlite3"
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['CACHE_TYPE'] = "RedisCache"
     app.config['CACHE_DEFAULT_TIMEOUT'] = 30
