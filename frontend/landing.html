@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <title>Hospital Management System</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+    rel="stylesheet">
+
+    <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <style>
+
+        body{
+
+            background:#f1f5f9;
+            font-family:Arial, Helvetica, sans-serif;
+
+        }
+
+        .navbar-custom{
+
+            background:#0f172a;
+            padding:15px 40px;
+
+        }
+
+        .navbar-brand{
+
+            color:white !important;
+            font-size:28px;
+            font-weight:bold;
+
+        }
+
+        .navbar-brand span{
+
+            color:#60a5fa;
+
+        }
+
+        .nav-link{
+
+            color:white !important;
+            margin-left:20px;
+
+        }
+
+        .nav-link:hover{
+
+            color:#93c5fd !important;
+
+        }
+
+        /* HERO SECTION */
+
+        .hero-section{
+
+            padding:80px 40px;
+            background:white;
+
+        }
+
+        .hero-title{
+
+            font-size:55px;
+            font-weight:bold;
+            color:#0f172a;
+
+        }
+
+        .hero-title span{
+
+            color:#2563eb;
+
+        }
+
+        .hero-text{
+
+            margin-top:20px;
+            font-size:18px;
+            color:#475569;
+            line-height:1.8;
+
+        }
+
+        .hero-btn{
+
+            margin-top:30px;
+
+        }
+
+        .hero-btn .btn{
+
+            margin-right:15px;
+            border-radius:10px;
+            padding:12px 25px;
+
+        }
+
+        .hero-image{
+
+            width:100%;
+            border-radius:20px;
+
+        }
+
+        .feature-section{
+
+            padding:70px 40px;
+
+        }
+
+        .section-title{
+
+            text-align:center;
+            margin-bottom:50px;
+
+        }
+
+        .section-title h2{
+
+            font-size:40px;
+            font-weight:bold;
+            color:#0f172a;
+
+        }
+
+        .feature-card{
+
+            background:white;
+            padding:30px;
+            border-radius:15px;
+            text-align:center;
+            box-shadow:0px 5px 15px rgba(0,0,0,0.08);
+            height:100%;
+
+        }
+
+        .feature-card i{
+
+            font-size:45px;
+            color:#2563eb;
+            margin-bottom:20px;
+
+        }
+
+        .feature-card h4{
+
+            color:#0f172a;
+            margin-bottom:15px;
+
+        }
+
+        .feature-card p{
+
+            color:#64748b;
+
+        }
+
+        .stats-section{
+
+            background:#dbeafe;
+            padding:70px 40px;
+
+        }
+
+        .stats-card{
+
+            background:white;
+            border-radius:15px;
+            padding:30px;
+            text-align:center;
+            box-shadow:0px 5px 15px rgba(0,0,0,0.08);
+
+        }
+
+        .stats-card h2{
+
+            font-size:40px;
+            color:#2563eb;
+            font-weight:bold;
+
+        }
+
+        .stats-card p{
+
+            color:#475569;
+            margin-top:10px;
+
+        }
+
+        .footer{
+
+            background:#0f172a;
+            color:white;
+            padding:30px;
+            text-align:center;
+            margin-top:50px;
+
+        }
+
+        .footer i{
+
+            margin:10px;
+            font-size:20px;
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
+
+    <div class="container-fluid">
+
+        <a class="navbar-brand">
+            Hospital <span>Management System</span>
+        </a>
+
+        <button class="navbar-toggler"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#navbarNav">
+
+            <span class="navbar-toggler-icon"></span>
+
+        </button>
+
+        <div class="collapse navbar-collapse justify-content-end"
+        id="navbarNav">
+
+            <ul class="navbar-nav">
+
+                <li class="nav-item">
+                    <a class="nav-link" href="#home">
+                        Home
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="#departments">
+                        Departments
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="#features">
+                        Features
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="#stats">
+                        Stats
+                    </a>
+                </li>
+
+                <li class="nav-item">
+
+                    <a class="nav-link" href="/login">
+                        Login
+                    </a>
+
+                </li>
+
+            </ul>
+
+        </div>
+
+    </div>
+
+</nav>
+
+<section class="hero-section" id="home">
+
+    <div class="container-fluid">
+
+        <div class="row align-items-center">
+
+            <div class="col-lg-6">
+
+                <h1 class="hero-title">
+
+                    Smart Hospital
+                    <span>Management System</span>
+
+                </h1>
+
+                <p class="hero-text">
+
+                    A modern hospital management platform where patients
+                    can book appointments, doctors can manage availability,
+                    and admins can monitor the complete hospital system
+                    efficiently.
+
+                </p>
+
+                <div class="hero-btn">
+
+                    <a href="/register">
+
+                        <button class="btn btn-primary">
+
+                            Register
+
+                        </button>
+
+                    </a>
+
+                    <a href="/login">
+
+                        <button class="btn btn-outline-primary">
+
+                            Login
+
+                        </button>
+
+                    </a>
+
+                </div>
+
+            </div>
+
+            <div class="col-lg-6">
+
+                <img src="{{ url_for('static', filename='Hospital Management Landing Page.png') }}" class="hero-image" alt="Hospital Management Landing Page">
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<section class="feature-section" id="departments">
+
+    <div class="section-title">
+
+        <h2>
+
+            Departments
+
+        </h2>
+
+    </div>
+
+    <div class="container-fluid">
+
+        <div class="row g-4">
+
+            <div class="col-md-4">
+
+                <div class="feature-card">
+
+                    <i class="fa-solid fa-heart-pulse"></i>
+
+                    <h4>
+                        Cardiology
+                    </h4>
+
+                    <p>
+
+                        Department of Cardiology to treat patients with heart related diseases
+
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="col-md-4">
+
+                <div class="feature-card">
+
+                    <i class="fa-solid fa-ribbon"></i>
+
+                    <h4>
+                        Oncology
+                    </h4>
+
+                    <p>
+
+                        Department of Oncology has specialized doctors to treat cancer
+
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="col-md-4">
+
+                <div class="feature-card">
+
+                    <i class="fa-solid fa-user-doctor"></i>
+
+                    <h4>
+                        General
+                    </h4>
+
+                    <p>
+
+                        General department have specialized doctors to treat communicable diseases
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<section class="feature-section" id="features">
+
+    <div class="section-title">
+
+        <h2>
+
+            Our Features
+
+        </h2>
+
+    </div>
+
+    <div class="container-fluid">
+
+        <div class="row g-4">
+
+            <div class="col-md-4">
+
+                <div class="feature-card">
+
+                    <i class="fa-solid fa-calendar-check"></i>
+
+                    <h4>
+                        Appointment Booking
+                    </h4>
+
+                    <p>
+
+                        Patients can easily book appointments
+                        with doctors based on availability.
+
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="col-md-4">
+
+                <div class="feature-card">
+
+                    <i class="fa-solid fa-user-doctor"></i>
+
+                    <h4>
+                        Doctor Dashboard
+                    </h4>
+
+                    <p>
+
+                        Doctors can manage schedules,
+                        patient history, and appointments.
+
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="col-md-4">
+
+                <div class="feature-card">
+
+                    <i class="fa-solid fa-hospital-user"></i>
+
+                    <h4>
+                        Patient Management
+                    </h4>
+
+                    <p>
+
+                        Admin can manage doctors,
+                        patients, and hospital records.
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<section class="stats-section" id="stats">
+
+    <div class="container-fluid">
+
+        <div class="row g-4">
+
+            <div class="col-md-3">
+
+                <div class="stats-card">
+
+                    <h2>
+                        120+
+                    </h2>
+
+                    <p>
+                        Doctors
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="col-md-3">
+
+                <div class="stats-card">
+
+                    <h2>
+                        500+
+                    </h2>
+
+                    <p>
+                        Patients
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="col-md-3">
+
+                <div class="stats-card">
+
+                    <h2>
+                        24/7
+                    </h2>
+
+                    <p>
+                        Emergency Service
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="col-md-3">
+
+                <div class="stats-card">
+
+                    <h2>
+                        3+
+                    </h2>
+
+                    <p>
+                        Departments
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+  
+
+<div class="footer">
+
+    <h4>
+
+        Hospital Management System
+
+    </h4>
+
+    <p>
+
+        Efficient healthcare management for doctors,
+        patients, and administrators.
+
+    </p>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
