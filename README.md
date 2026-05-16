@@ -16,6 +16,8 @@ The Hospital Management System is a full-stack web application designed to digit
 The project focuses on building a responsive, secure, and high-performance healthcare platform using Flask-based REST APIs and Vue.js frontend architecture.
 </p>
 
+<b>Note:<b> <p>All the stats mentioned on the landing page are just for representational purposes it may or may not be the real data.</p>
+
 <hr>
 
 <h2>🚀 Features</h2>
